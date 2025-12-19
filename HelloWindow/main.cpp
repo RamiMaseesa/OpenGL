@@ -55,6 +55,7 @@ int main()
     // vars
     // ----
     glm::mat4 trans = glm::mat4(1.0f);
+    glm::mat4 trans2 = glm::mat4(1.0f);
 
     float rotationAngle = 0.0f;
     bool addAngle = true;
@@ -85,7 +86,11 @@ int main()
                     (y - 1) * spacing,   // -1, 0, 1
                     (z - 2) * spacing    // -1, 0, 1
                 );
+                
                 model = glm::translate(model, position);
+
+
+
                 cubeModels.push_back(model);
             }
         }
@@ -121,13 +126,24 @@ int main()
             if (rotationAngle == 0) addAngle = true;
         }
 
+        float scaleAmount = 1.0f + 0.2f * sin(glfwGetTime()); // oscillates 0.8 -> 1.2
+        glm::mat4 trans2 = glm::scale(glm::mat4(1.0f), glm::vec3(scaleAmount));
+
         // draw
         // ----
-
         for (int i = 0; i < cubeModels.size(); i++) {
             glUseProgram(cubes[i].shaderProgram); // assuming you have 27 Cube objects
             Go3D(cubes[i].shaderProgram);
-            cubes[i].Draw(cubeModels[i]);
+
+            if (i % 3 == 0) {
+                cubes[i].Draw(cubeModels[i] * trans2);
+            }
+            else {
+                cubes[i].Draw(cubeModels[i] * trans);
+            }
+
+
+
         }
 
 
