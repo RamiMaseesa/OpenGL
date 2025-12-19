@@ -76,9 +76,9 @@ void Cube::Create() {
         {
             vec4 texColor = texture(u_texture, TexCoord);
 
-            float r = 0.5 + 0.5 * sin(u_time * 0.5);
-            float g = 0.5 + 0.5 * sin(u_time * 1.0);
-            float b = 0.5 + 0.5 * sin(u_time * 1.5);
+            float r = 0.2 * sin(u_time * 0.5);
+            float g = 0.2 * sin(u_time * 1.0);
+            float b = 0.2 * sin(u_time * 1.5);
 
             vec3 animColor = vec3(r, g, b);
 
@@ -86,10 +86,10 @@ void Cube::Create() {
             // vec3 finalColor = texColor.rgb * vColor * animColor;
 
             // TEXTURE * ANIMATION
-            vec3 finalColor = texColor.rgb * animColor;
+            vec3 finalColor = texColor.rgb + animColor;
 
 
-            FragColor = vec4(finalColor  ,texColor.a);
+            FragColor = vec4(finalColor ,1);
         }
     )";
 
