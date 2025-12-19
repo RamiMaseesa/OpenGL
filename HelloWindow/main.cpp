@@ -2,8 +2,6 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include "Projects/Task1/Triangle.h"
-#include "Projects/Task1/Rectangle.h"
 #include"Projects/3DObjects/Cube.h"
 
 
@@ -56,16 +54,42 @@ int main()
 
     // vars
     // ----
-    Triangle t1;
-    t1.Create();
     glm::mat4 trans = glm::mat4(1.0f);
 
     float rotationAngle = 0.0f;
     bool addAngle = true;
 
-    Cube cube;
-    cube.Create();
+    std::vector<Cube> cubes;
+
+    // create the cubes
+    for (int i = 0; i < 27; i++) {
+        Cube cube;
+        cube.Create();
+        cubes.push_back(cube);
+    }
     glm::mat4 transCube = glm::mat4(1.0f);
+
+    std::vector<glm::mat4> cubeModels;
+    cubeModels.reserve(27); // reserve space for 27 cubes
+
+    float spacing = 1.5f; // distance between cubes
+
+    // 3x3x3 nested loops
+    for (int x = 0; x < 3; x++) {
+        for (int y = 0; y < 3; y++) {
+            for (int z = 0; z < 3; z++) {
+                glm::mat4 model = glm::mat4(1.0f); // identity
+                // center the cube formation around the origin
+                glm::vec3 position = glm::vec3(
+                    (x - 1) * spacing,   // -1, 0, 1
+                    (y - 1) * spacing,   // -1, 0, 1
+                    (z - 2) * spacing    // -1, 0, 1
+                );
+                model = glm::translate(model, position);
+                cubeModels.push_back(model);
+            }
+        }
+    }
 
     // render loop
     // -----------
@@ -77,8 +101,6 @@ int main()
 
         // render
         // ------
-        glUseProgram(t1.shaderProgram);
-        Go3D(t1.shaderProgram);
         
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glEnable(GL_DEPTH_TEST);
@@ -101,9 +123,13 @@ int main()
 
         // draw
         // ----
-        glUseProgram(cube.shaderProgram);
-        Go3D(cube.shaderProgram);
-        cube.Draw(trans);
+
+        for (int i = 0; i < cubeModels.size(); i++) {
+            glUseProgram(cubes[i].shaderProgram); // assuming you have 27 Cube objects
+            Go3D(cubes[i].shaderProgram);
+            cubes[i].Draw(cubeModels[i]);
+        }
+
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
