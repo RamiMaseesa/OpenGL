@@ -3,13 +3,11 @@
 
 #include <iostream>
 #include"Projects/3DObjects/Cube.h"
-
-
-
+#include "Projects/3DCamera/Camera.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void Go3D(unsigned int shaderProgram);
+void Go3D(unsigned int shaderProgram, Camera camera);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -51,6 +49,14 @@ int main()
     // static vars
     // -----------
     srand(static_cast<unsigned int>(time(0)));
+
+    Camera camera(SCR_WIDTH, SCR_HEIGHT);
+    glfwSetWindowUserPointer(window, &camera);
+    glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y) {
+        Camera* cam = static_cast<Camera*>(glfwGetWindowUserPointer(window));
+        cam->mouse_callback(window, x, y);
+        });
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // vars
     // ----
@@ -103,6 +109,7 @@ int main()
         // input
         // -----
         processInput(window);
+        camera.processInput(window);
 
         // render
         // ------
@@ -133,19 +140,10 @@ int main()
         // ----
         for (int i = 0; i < cubeModels.size(); i++) {
             glUseProgram(cubes[i].shaderProgram); // assuming you have 27 Cube objects
-            Go3D(cubes[i].shaderProgram);
+            Go3D(cubes[i].shaderProgram, camera);
 
-            if (i % 3 == 0) {
-                cubes[i].Draw(cubeModels[i] * trans2);
-            }
-            else {
-                cubes[i].Draw(cubeModels[i] * trans);
-            }
-
-
-
+            cubes[i].Draw(cubeModels[i] * trans);
         }
-
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -181,12 +179,15 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void Go3D(unsigned int shaderProgram)
+void Go3D(unsigned int shaderProgram, Camera camera)
 {
     glUseProgram(shaderProgram);
 
-    glm::mat4 view = glm::translate(glm::mat4(1.0f),
-        glm::vec3(0.0f, 0.0f, -3.0f));
+    glm::mat4 view = glm::lookAt(
+        camera.cameraPos,
+        camera.cameraPos + camera.cameraFront,
+        camera.cameraUp
+    );
 
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),

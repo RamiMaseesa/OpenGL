@@ -136,6 +136,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="HelperFunctions\Shader\ShaderUtil.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Projects\3DCamera\Camera.cpp" />
     <ClCompile Include="Projects\3DObjects\Cube.cpp" />
     <ClCompile Include="Projects\Task1\Rectangle.cpp" />
     <ClCompile Include="Projects\Task1\Triangle.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="dependencies\include\KHR\khrplatform.h" />
     <ClInclude Include="HelperFunctions\Shader\ShaderUtil.h" />
     <ClInclude Include="HelperFunctions\Textures\stb_image.h" />
+    <ClInclude Include="Projects\3DCamera\Camera.h" />
     <ClInclude Include="Projects\3DObjects\Cube.h" />
     <ClInclude Include="Projects\Task1\Rectangle.h" />
     <ClInclude Include="Projects\Task1\Triangle.h" />
