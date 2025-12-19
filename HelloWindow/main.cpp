@@ -66,10 +66,12 @@ int main()
     float rotationAngle = 0.0f;
     bool addAngle = true;
 
+    int size = 10;
+    int cubeCount = size * size * size;
     std::vector<Cube> cubes;
 
     // create the cubes
-    for (int i = 0; i < 27; i++) {
+    for (int i = 0; i < cubeCount; i++) {
         Cube cube;
         cube.Create();
         cubes.push_back(cube);
@@ -77,26 +79,23 @@ int main()
     glm::mat4 transCube = glm::mat4(1.0f);
 
     std::vector<glm::mat4> cubeModels;
-    cubeModels.reserve(27); // reserve space for 27 cubes
+    cubeModels.reserve(cubeCount); // reserve space for cubeCount cubes
 
+    
     float spacing = 1.5f; // distance between cubes
 
-    // 3x3x3 nested loops
-    for (int x = 0; x < 3; x++) {
-        for (int y = 0; y < 3; y++) {
-            for (int z = 0; z < 3; z++) {
-                glm::mat4 model = glm::mat4(1.0f); // identity
-                // center the cube formation around the origin
-                glm::vec3 position = glm::vec3(
-                    (x - 1) * spacing,   // -1, 0, 1
-                    (y - 1) * spacing,   // -1, 0, 1
-                    (z - 2) * spacing    // -1, 0, 1
+    for (int x = 0; x < size; x++) {
+        for (int y = 0; y < size; y++) {
+            for (int z = 0; z < size; z++) {
+                glm::mat4 model = glm::mat4(1.0f);
+
+                glm::vec3 position(
+                    (x - size / 2) * spacing,
+                    (y - size / 2) * spacing,
+                    (z - size / 2) * spacing
                 );
-                
+
                 model = glm::translate(model, position);
-
-
-
                 cubeModels.push_back(model);
             }
         }
@@ -139,7 +138,7 @@ int main()
         // draw
         // ----
         for (int i = 0; i < cubeModels.size(); i++) {
-            glUseProgram(cubes[i].shaderProgram); // assuming you have 27 Cube objects
+            glUseProgram(cubes[i].shaderProgram); // assuming you have cubeCount Cube objects
             Go3D(cubes[i].shaderProgram, camera);
 
             cubes[i].Draw(cubeModels[i] * trans);
