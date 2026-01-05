@@ -142,20 +142,32 @@ const char* ReturnBasicVertexSource() {
         layout(location = 1) in vec3 aColor;
         layout(location = 2) in vec2 aTex;
         
+		// Instance matrix (4 vec4 attributes)
+		layout(location = 3) in vec4 instanceRow0;
+		layout(location = 4) in vec4 instanceRow1;
+		layout(location = 5) in vec4 instanceRow2;
+		layout(location = 6) in vec4 instanceRow3;
+
 		out vec2 TexCoord;
 		out vec3 vColor;
-
 		out vec3 vPos;
+
+		// Uniforms
+		uniform mat4 globalRotation;
+		uniform sampler2D u_texture;
+		uniform float u_time;
 		
 		uniform mat4 model;
 		uniform mat4 view;
 		uniform mat4 projection;
 		
         void main() {
-            gl_Position = projection * view * model * vec4(aPos, 1.0);
+
+            mat4 instanceModel = mat4(instanceRow0, instanceRow1, instanceRow2, instanceRow3);
+			gl_Position = projection * view * globalRotation * instanceModel * vec4(aPos, 1.0);
+
             TexCoord = vec2(aTex.x, aTex.y);
 			vColor = aColor;
-			
         }
     )";
 }

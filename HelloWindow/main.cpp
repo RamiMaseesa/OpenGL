@@ -107,13 +107,9 @@ int main()
 
     // create the cubes
     Cube baseCube;
-    for (int i = 0; i < cubeCount; i++) {
-        
-        baseCube.CreateInstance(InitCube.VAO, InitCube.VBO, InitCube.shaderProgram, InitCube.texture, cubeModels);
-    }
+    baseCube.CreateInstance(InitCube.VAO, InitCube.VBO, InitCube.shaderProgram, InitCube.texture, cubeModels);
+    
     glm::mat4 transCube = glm::mat4(1.0f);
-
-
 
     // render loop
     // -----------
@@ -145,9 +141,6 @@ int main()
 
             if (rotationAngle == 0) addAngle = true;
         }
-
-        float scaleAmount = 1.0f + 0.2f * sin(glfwGetTime()); // oscillates 0.8 -> 1.2
-        glm::mat4 trans2 = glm::scale(glm::mat4(1.0f), glm::vec3(scaleAmount));
 
         // draw
         // ----

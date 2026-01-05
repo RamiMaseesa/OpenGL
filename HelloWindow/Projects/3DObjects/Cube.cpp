@@ -115,6 +115,23 @@ void Cube::CreateInstance(unsigned int VAO, unsigned int VBO, unsigned int shade
         cubeModels.data(),
         GL_STATIC_DRAW
     );
+
+    // Attach instance VBO to VAO
+    glBindVertexArray(VAO);
+    std::size_t vec4Size = sizeof(glm::vec4);
+    for (int i = 0; i < 4; i++) {
+        glEnableVertexAttribArray(3 + i);              // locations 3,4,5,6
+        glVertexAttribPointer(
+            3 + i,
+            4,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(glm::mat4),
+            (void*)(i * vec4Size)
+        );
+        glVertexAttribDivisor(3 + i, 1);              // per-instance
+    }
+    glBindVertexArray(0);
 }
 
 void Cube::Draw(glm::mat4 model)
@@ -135,20 +152,18 @@ void Cube::Draw(glm::mat4 model)
 }
 
 void Cube::DrawInstanced(int instanceCount) {
+    glUseProgram(shaderProgram);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-
     glUniform1f(glGetUniformLocation(this->shaderProgram, "u_time"), glfwGetTime());
     glUniform1i(glGetUniformLocation(this->shaderProgram, "u_texture"), 0);
 
-    glGenBuffers(1, &instanceVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glBufferData(
-        GL_ARRAY_BUFFER,
-        cubeModels.size() * sizeof(glm::mat4),
-        cubeModels.data(),
-        GL_STATIC_DRAW
-    );
+    glBindVertexArray(VAO);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, instanceCount);
+    glBindVertexArray(0);
+
+
 }
 
 void Cube::Destroy() {
