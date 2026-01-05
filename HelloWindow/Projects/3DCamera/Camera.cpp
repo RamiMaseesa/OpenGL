@@ -2,7 +2,7 @@
 
 Camera::Camera(float width, float height)
 {
-    cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+    cameraPos = glm::vec3(0.0f, 0.0f, 1000.0f);
     cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -75,7 +75,7 @@ void Camera::processInput(GLFWwindow* window) {
         cameraPos -= cameraUp * velocity;
 
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        cameraSpeed = 7.5;
+        cameraSpeed = 15.0;
     else
-        cameraSpeed = 2.5;
+        cameraSpeed = 5.0;
 }
