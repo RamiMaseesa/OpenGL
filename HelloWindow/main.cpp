@@ -48,8 +48,10 @@ int main()
 
     // static vars
     // -----------
+    // random
     srand(static_cast<unsigned int>(time(0)));
 
+    // camera stuff
     Camera camera(SCR_WIDTH, SCR_HEIGHT);
     glfwSetWindowUserPointer(window, &camera);
     glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y) {
@@ -58,30 +60,16 @@ int main()
         });
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    // vars
-    // ----
-    glm::mat4 trans = glm::mat4(1.0f);
-    glm::mat4 trans2 = glm::mat4(1.0f);
+    // 1 cube instance
+    Cube InitCube;
+    InitCube.Create();
 
-    float rotationAngle = 0.0f;
-    bool addAngle = true;
-
-    int size = 10;
+    int size = 30;
     int cubeCount = size * size * size;
-    std::vector<Cube> cubes;
-
-    // create the cubes
-    for (int i = 0; i < cubeCount; i++) {
-        Cube cube;
-        cube.Create();
-        cubes.push_back(cube);
-    }
-    glm::mat4 transCube = glm::mat4(1.0f);
 
     std::vector<glm::mat4> cubeModels;
     cubeModels.reserve(cubeCount); // reserve space for cubeCount cubes
 
-    
     float spacing = 1.5f; // distance between cubes
 
     for (int x = 0; x < size; x++) {
@@ -100,6 +88,32 @@ int main()
             }
         }
     }
+
+    Cube cube;
+    cube.CreateInstance(
+        InitCube.VAO,
+        InitCube.VBO,
+        InitCube.shaderProgram,
+        InitCube.texture,
+        cubeModels
+    );
+    // vars
+    // ----
+    glm::mat4 trans = glm::mat4(1.0f);
+    glm::mat4 trans2 = glm::mat4(1.0f);
+
+    float rotationAngle = 0.0f;
+    bool addAngle = true;
+
+    // create the cubes
+    Cube baseCube;
+    for (int i = 0; i < cubeCount; i++) {
+        
+        baseCube.CreateInstance(InitCube.VAO, InitCube.VBO, InitCube.shaderProgram, InitCube.texture, cubeModels);
+    }
+    glm::mat4 transCube = glm::mat4(1.0f);
+
+
 
     // render loop
     // -----------
@@ -137,12 +151,15 @@ int main()
 
         // draw
         // ----
-        for (int i = 0; i < cubeModels.size(); i++) {
-            glUseProgram(cubes[i].shaderProgram); // assuming you have cubeCount Cube objects
-            Go3D(cubes[i].shaderProgram, camera);
+        glUseProgram(InitCube.shaderProgram);
+        Go3D(InitCube.shaderProgram, camera);
 
-            cubes[i].Draw(cubeModels[i] * trans);
-        }
+        glUniformMatrix4fv(
+            glGetUniformLocation(InitCube.shaderProgram, "globalRotation"),
+            1, GL_FALSE, glm::value_ptr(trans)
+        );
+
+        InitCube.DrawInstanced(cubeModels.size());
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -152,7 +169,7 @@ int main()
 
     // free all the vars I made
     // ------------------------
-
+    
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------

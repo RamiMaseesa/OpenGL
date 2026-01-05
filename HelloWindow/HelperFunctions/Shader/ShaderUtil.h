@@ -3,6 +3,7 @@
 struct ObjectData {
 	unsigned int VAO;
 	unsigned int VBO;
+	unsigned int instanceVBO;
 	unsigned int shaderProgram;
 	unsigned int texture;
 };

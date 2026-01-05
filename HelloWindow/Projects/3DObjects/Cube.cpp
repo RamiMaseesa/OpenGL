@@ -99,6 +99,24 @@ void Cube::Create() {
     this->texture = LoadTexture("Resources/moon.jpg");
 }
 
+void Cube::CreateInstance(unsigned int VAO, unsigned int VBO, unsigned int shaderProgram,
+                unsigned int texture, std::vector<glm::mat4>& cubeModels) {
+
+    this->shaderProgram = shaderProgram;
+    this->VAO = VAO;
+    this->VBO = VBO;
+    this->texture = texture;
+
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        cubeModels.size() * sizeof(glm::mat4),
+        cubeModels.data(),
+        GL_STATIC_DRAW
+    );
+}
+
 void Cube::Draw(glm::mat4 model)
 {
     glUniform1f(glGetUniformLocation(shaderProgram, "u_time"), glfwGetTime());
@@ -116,6 +134,22 @@ void Cube::Draw(glm::mat4 model)
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
+void Cube::DrawInstanced(int instanceCount) {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glUniform1f(glGetUniformLocation(this->shaderProgram, "u_time"), glfwGetTime());
+    glUniform1i(glGetUniformLocation(this->shaderProgram, "u_texture"), 0);
+
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        cubeModels.size() * sizeof(glm::mat4),
+        cubeModels.data(),
+        GL_STATIC_DRAW
+    );
+}
 
 void Cube::Destroy() {
     glDeleteVertexArrays(1, &VAO);

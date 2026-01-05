@@ -9,9 +9,12 @@
 
 class Cube {
 public:
-    unsigned int VAO, VBO, texture, shaderProgram;
+    unsigned int VAO, VBO, instanceVBO, texture, shaderProgram;
 
     void Create();
+    void CreateInstance(unsigned int VAO, unsigned int VBO, unsigned int shaderProgram,
+               unsigned int texture, std::vector<glm::mat4>& cubeModels);
     void Draw(glm::mat4);
+    void DrawInstanced(int instanceCount);
     void Destroy();
 };
