@@ -69,11 +69,13 @@ int main()
     int size = 10;
     int cubeCount = size * size * size;
     std::vector<Cube> cubes;
+    Cube baseCube;
+    baseCube.Create();
 
     // create the cubes
     for (int i = 0; i < cubeCount; i++) {
         Cube cube;
-        cube.Create();
+        cube.Create(baseCube.VAO, baseCube.VBO, baseCube.texture, baseCube.shaderProgram);
         cubes.push_back(cube);
     }
     glm::mat4 transCube = glm::mat4(1.0f);

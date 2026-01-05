@@ -12,6 +12,7 @@ public:
     unsigned int VAO, VBO, texture, shaderProgram;
 
     void Create();
+    void Create(unsigned int VAO, unsigned int VBO, unsigned int texture, unsigned int shaderProgram);
     void Draw(glm::mat4);
     void Destroy();
 };

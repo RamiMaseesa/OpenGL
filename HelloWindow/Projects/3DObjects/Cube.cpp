@@ -99,6 +99,13 @@ void Cube::Create() {
     this->texture = LoadTexture("Resources/moon.jpg");
 }
 
+void Cube::Create(unsigned int VAO, unsigned int VBO, unsigned int texture, unsigned int shaderProgram) {
+    this->VAO = VAO;
+    this->VBO = VBO;
+    this->texture = texture;
+    this->shaderProgram = shaderProgram;
+}
+
 void Cube::Draw(glm::mat4 model)
 {
     glUniform1f(glGetUniformLocation(shaderProgram, "u_time"), glfwGetTime());
