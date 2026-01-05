@@ -2,7 +2,7 @@
 
 Camera::Camera(float width, float height)
 {
-    cameraPos = glm::vec3(0.0f, 0.0f, 1000.0f);
+    cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
     cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 

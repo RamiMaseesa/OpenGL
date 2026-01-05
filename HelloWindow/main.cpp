@@ -70,7 +70,7 @@ int main()
     std::vector<glm::mat4> cubeModels;
     cubeModels.reserve(cubeCount); // reserve space for cubeCount cubes
 
-    float spacing = 7.0f; // distance between cubes
+    float spacing = 100.0f; // distance between cubes
 
     for (int x = 0; x < size; x++) {
         for (int y = 0; y < size; y++) {
