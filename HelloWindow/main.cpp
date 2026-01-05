@@ -10,8 +10,8 @@ void processInput(GLFWwindow* window);
 void Go3D(unsigned int shaderProgram, Camera camera);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 int main()
 {
@@ -64,13 +64,13 @@ int main()
     Cube InitCube;
     InitCube.Create();
 
-    int size = 30;
+    int size = 100;
     int cubeCount = size * size * size;
 
     std::vector<glm::mat4> cubeModels;
     cubeModels.reserve(cubeCount); // reserve space for cubeCount cubes
 
-    float spacing = 1.5f; // distance between cubes
+    float spacing = 7.0f; // distance between cubes
 
     for (int x = 0; x < size; x++) {
         for (int y = 0; y < size; y++) {
@@ -201,7 +201,7 @@ void Go3D(unsigned int shaderProgram, Camera camera)
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
         (float)SCR_WIDTH / SCR_HEIGHT,
-        0.1f, 100.0f
+        0.1f, 1000000.0f
     );
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),
