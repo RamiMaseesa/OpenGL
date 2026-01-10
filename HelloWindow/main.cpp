@@ -64,7 +64,7 @@ int main()
     Cube InitCube;
     InitCube.Create();
 
-    int size = 100;
+    int size = 50;
     int cubeCount = size * size * size;
 
     std::vector<glm::mat4> cubeModels;
